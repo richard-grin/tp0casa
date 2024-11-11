@@ -25,7 +25,7 @@ public class Bb implements Serializable {
      * Valeur par défaut que l'utilisateur peut modifier.
      * Possible d'ajouter de nouveaux rôles dans la méthode getSystemRoles.
      */
-    private String systemRole = "helpful assistant";
+    private String systemRole;
     /**
      * Quand le rôle est choisi par l'utilisateur dans la liste déroulante,
      * il n'est plus possible de le modifier (voir code de la page JSF).
@@ -147,18 +147,24 @@ public class Bb implements Serializable {
      * Pour afficher la conversation dans le textArea de la page JSF.
      */
     private void afficherConversation() {
-        this.conversation.append("* User:\n").append(question).append("\n* Serveur:\n").append(reponse).append("\n");
+        this.conversation.append("== User:\n").append(question).append("\n== Serveur:\n").append(reponse).append("\n");
     }
 
     public List<SelectItem> getSystemRoles() {
         List<SelectItem> listeSystemRoles = new ArrayList<>();
         // Ces rôles ne seront utilisés que lorsque la réponse sera données par un LLM.
         String role = """
+                You are a helpful assistant. You help the user to find the information they need.
+                If the user type a question, you answer it.
+                """;
+        listeSystemRoles.add(new SelectItem(role, "Assistant"));
+        role = """
                 You are an interpreter. You translate from English to French and from French to English.
                 If the user type a French text, you translate it into English.
                 If the user type an English text, you translate it into French.
                 If the text contains only one to three words, give some examples of usage of these words in English.
                 """;
+        // 1er argument : la valeur du rôle, 2ème argument : le libellé du rôle
         listeSystemRoles.add(new SelectItem(role, "Traducteur Anglais-Français"));
         role = """
                 Your are a travel guide. If the user type the name of a country or of a town,
@@ -166,6 +172,8 @@ public class Bb implements Serializable {
                 are you tell them the average price of a meal.
                 """;
         listeSystemRoles.add(new SelectItem(role, "Guide touristique"));
+        // Présélectionne le premier rôle de la liste.
+        this.systemRole = (String) listeSystemRoles.getFirst().getValue();
         return listeSystemRoles;
     }
 }

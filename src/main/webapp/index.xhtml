@@ -14,6 +14,7 @@
         <h:messages errorStyle="color: red" showDetail="true" showSummary="false"/>
         <h:form id="form">
             <p:outputLabel for="systemrole" value="Rôle de l'API : "/>
+            <!-- La valeur choisie dans cette liste déroulante sera affectée à la propriété systemRole du backing bean -->
             <p:selectOneMenu id="systemrole" value="#{bb.systemRole}" editable="true"
                              disabled="#{! bb.systemRoleChangeable}">
                 <f:selectItems value="#{bb.systemRoles}"/>
